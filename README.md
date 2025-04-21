@@ -21,4 +21,4 @@ Sistema para la optimización de gestión de documentos en el área de coordinac
 3. Configurar variables de entorno:
 - Copiar `.env.example` a un nuevo archivo `.env`
 - Editar `.env` con las configuraciones locales
-5. Iniciar el servidor con el comando `node app.js`
+4. Iniciar el servidor con el comando `node app.js`
