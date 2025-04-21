@@ -1,0 +1,20 @@
+# Dependencias
+/node_modules
+npm-debug.log
+
+# Variables de entorno
+.env
+
+# Logs
+logs
+*.log
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Directorio de caché de npm
+.npm
+
+# Archivos de configuración local
+config.local.js
