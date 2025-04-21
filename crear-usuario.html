@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crear Usuario</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container mt-5">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Registro de Usuario</h4>
+      </div>
+      <div class="card-body">
+        <form id="formularioUsuario">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" name="nombre" id="nombre" class="form-control" required />
+          </div>
+          <div class="mb-3">
+            <label for="correo" class="form-label">Correo</label>
+            <input type="email" name="correo" id="correo" class="form-control" required />
+          </div>
+          <div class="mb-3">
+            <label for="contrasena" class="form-label">Contraseña</label>
+            <input type="password" name="contrasena" id="contrasena" class="form-control" required />
+          </div>
+          <div class="mb-3">
+            <label for="rol" class="form-label">Rol</label>
+            <select name="rol" id="rol" class="form-select">
+              <option value="docente">Docente</option>
+              <option value="coordinador">Coordinador</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="estatus" class="form-label">Estatus</label>
+            <select name="estatus" id="estatus" class="form-select">
+              <option value="activo">Activo</option>
+              <option value="baja">Baja</option>
+              <option value="temporal">Temporal</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success">Crear Usuario</button>
+        </form>
+        <div id="resultado" class="mt-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('formularioUsuario');
+    const resultado = document.getElementById('resultado');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const datos = Object.fromEntries(formData.entries());
+
+      try {
+        const res = await fetch('http://localhost:3000/api/usuarios', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(datos)
+        });
+
+        const json = await res.json();
+        if (json.error) {
+          resultado.innerHTML = `<div class="alert alert-danger">❌ ${json.error}</div>`;
+        } else {
+          resultado.innerHTML = `<div class="alert alert-success">✅ ${json.mensaje} (ID: ${json.id})</div>`;
+          form.reset();
+        }
+      } catch (err) {
+        resultado.innerHTML = `<div class="alert alert-danger">⚠️ Error en la petición: ${err.message}</div>`;
+      }
+    });
+  </script>
+</body>
+</html>
