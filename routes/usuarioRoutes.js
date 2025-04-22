@@ -72,5 +72,19 @@ router.get('/:id', (req, res) => {
   });
 });
 
+// Cambiar estatus a "baja" (eliminar lógico)
+router.put('/:id/baja', (req, res) => {
+  const id = req.params.id;
+  const sql = 'UPDATE Usuario SET estatus = ? WHERE UsuarioID = ?';
+
+  db.query(sql, ['baja', id], (err, result) => {
+    if (err) {
+      console.error('Error al dar de baja al usuario:', err);
+      return res.status(500).json({ error: 'Error al eliminar el usuario' });
+    }
+
+    return res.json({ mensaje: 'Usuario dado de baja correctamente' });
+  });
+});
 
 module.exports = router;

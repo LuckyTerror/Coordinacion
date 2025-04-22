@@ -41,20 +41,36 @@
         const usuarios = await res.json();
 
         usuarios.forEach(u => {
-          tabla.innerHTML += `
-            <tr>
+            let claseColor = '';
+            switch (u.Estatus.toLowerCase()) {
+                case 'activo':
+                claseColor = 'text-bg-success';
+                break;
+                case 'temporal':
+                claseColor = 'text-bg-warning';
+                break;
+                case 'baja':
+                claseColor = 'text-bg-danger';
+                break;
+                default:
+                claseColor = '';
+            }
+
+            tabla.innerHTML += `
+                <tr>
                 <td>${u.UsuarioID}</td>
                 <td>${u.Nombre}</td>
                 <td>${u.Correo}</td>
                 <td>${u.Rol}</td>
-                <td>${u.Estatus}</td>
+                <td><span class="badge ${claseColor}">${u.Estatus}</span></td>
                 <td>
-                <button class="btn btn-warning btn-sm me-1" onclick="editarUsuario(${u.UsuarioID})">✏️</button>
-                <button class="btn btn-danger btn-sm" onclick="eliminarUsuario(${u.id})">🗑️</button>
-              </td>
-            </tr>
-          `;
-        });
+                    <a href="editar-usuario.html?id=${u.UsuarioID}" class="btn btn-warning btn-sm me-1">✏️</a>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarUsuario(${u.UsuarioID})">🗑️</button>
+                </td>
+                </tr>
+            `;
+            });
+
       } catch (error) {
         console.error('Error al cargar usuarios:', error);
       }
@@ -64,9 +80,27 @@
     window.location.href = `editar-usuario.html?id=${id}`;
     }
 
-    function eliminarUsuario(id) {
-      alert(`Aquí iría la lógica para eliminar el usuario con ID: ${u.UsuarioID}`);
+    async function eliminarUsuario(id) {
+    if (!confirm("¿Estás seguro de que quieres dar de baja este usuario?")) return;
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/usuarios/${id}/baja`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const json = await res.json();
+
+      if (json.error) {
+        alert('❌ Error: ' + json.error);
+      } else {
+        alert('✅ ' + json.mensaje);
+        document.getElementById('btnCargarUsuarios').click(); // Recarga la tabla
+      }
+    } catch (err) {
+      alert('⚠️ Error en la petición: ' + err.message);
     }
+  }
   </script>
 </body>
 </html>
