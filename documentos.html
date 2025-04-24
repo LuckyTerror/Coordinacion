@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Entrega de Documentos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-light">
+  <div class="container mt-5">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Entrega de Documentos Académicos</h4>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle text-center">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Documento</th>
+                <th>Descripción</th>
+                <th>Periodo</th>
+                <th>Fecha Límite</th>
+                <th>Archivo</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="tablaDocumentos">
+              <!-- Se llenará dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+        <div id="mensaje" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const documentos = [
+      {
+        nombre: "Constancia de Cursos de Actualización y CV",
+        descripcion: "Documento que acredita formación reciente del docente.",
+        periodo: "2025-A",
+        fechaLimite: "2025-04-30"
+      },
+      {
+        nombre: "Avance Programático Inicial",
+        descripcion: "Plan de trabajo al inicio del semestre.",
+        periodo: "2025-A",
+        fechaLimite: "2025-04-30"
+      },
+      {
+        nombre: "Avance Programático Final",
+        descripcion: "Reporte de avance académico al finalizar semestre.",
+        periodo: "2025-A",
+        fechaLimite: "2025-06-30"
+      },
+      {
+        nombre: "Calificaciones Primer Parcial",
+        descripcion: "Registro de calificaciones del primer parcial.",
+        periodo: "2025-A",
+        fechaLimite: "2025-05-10"
+      },
+      {
+        nombre: "Calificaciones Segundo Parcial",
+        descripcion: "Registro de calificaciones del segundo parcial.",
+        periodo: "2025-A",
+        fechaLimite: "2025-06-10"
+      },
+      {
+        nombre: "Calificaciones Evaluación Final (Ordinario)",
+        descripcion: "Calificaciones de evaluación final ordinaria.",
+        periodo: "2025-A",
+        fechaLimite: "2025-06-25"
+      },
+      {
+        nombre: "Calificaciones Extraordinario",
+        descripcion: "Calificaciones de alumnos en examen extraordinario.",
+        periodo: "2025-A",
+        fechaLimite: "2025-07-05"
+      },
+      {
+        nombre: "Calificaciones Titulo de Suficiencia",
+        descripcion: "Evaluaciones aplicadas bajo título de suficiencia.",
+        periodo: "2025-A",
+        fechaLimite: "2025-07-15"
+      }
+    ];
+
+    const tabla = document.getElementById("tablaDocumentos");
+
+    documentos.forEach((doc, index) => {
+      tabla.innerHTML += `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${doc.nombre}</td>
+          <td>${doc.descripcion}</td>
+          <td>${doc.periodo}</td>
+          <td>${doc.fechaLimite}</td>
+          <td>
+            <input type="file" class="form-control form-control-sm" />
+          </td>
+          <td>
+            <button class="btn btn-success btn-sm" onclick="confirmarEntrega('${doc.nombre}')">📤 Entregar</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    function confirmarEntrega(nombreDocumento) {
+      Swal.fire({
+        title: `¿Confirmas entregar el documento?`,
+        text: `"${nombreDocumento}" será enviado al coordinador.`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, entregar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire('✅ Entregado', 'Tu documento ha sido enviado con éxito.', 'success');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

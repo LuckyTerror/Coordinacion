@@ -5,8 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lista de Usuarios</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa; /* Color de fondo claro */
+    }
+    .card {
+      border-radius: 10px; /* Bordes redondeados */
+    }
+    .table th, .table td {
+      vertical-align: middle; /* Alinear verticalmente el contenido */
+    }
+    .badge {
+      font-size: 0.9rem; /* Tamaño de fuente de las etiquetas */
+    }
+  </style>
 </head>
-<body class="bg-light">
+<body>
   <div class="container mt-5">
     <div class="card shadow">
       <div class="card-header bg-primary text-white">
@@ -14,7 +28,7 @@
       </div>
       <div class="card-body">
         <button id="btnCargarUsuarios" class="btn btn-primary mb-3">🔄 Cargar Usuarios</button>
-        <table class="table table-bordered">
+        <table class="table table-bordered table-striped">
           <thead class="table-light">
             <tr>
               <th>ID</th>
@@ -69,7 +83,7 @@
                 </td>
                 </tr>
             `;
-            });
+        });
 
       } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -77,30 +91,30 @@
     });
 
     function editarUsuario(id) {
-    window.location.href = `editar-usuario.html?id=${id}`;
+      window.location.href = `editar-usuario.html?id=${id}`;
     }
 
     async function eliminarUsuario(id) {
-    if (!confirm("¿Estás seguro de que quieres dar de baja este usuario?")) return;
+      if (!confirm("¿Estás seguro de que quieres dar de baja este usuario?")) return;
 
-    try {
-      const res = await fetch(`http://localhost:3000/api/usuarios/${id}/baja`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' }
-      });
+      try {
+        const res = await fetch(`http://localhost:3000/api/usuarios/${id}/baja`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' }
+        });
 
-      const json = await res.json();
+        const json = await res.json();
 
-      if (json.error) {
-        alert('❌ Error: ' + json.error);
-      } else {
-        alert('✅ ' + json.mensaje);
-        document.getElementById('btnCargarUsuarios').click(); // Recarga la tabla
+        if (json.error) {
+          alert('❌ Error: ' + json.error);
+        } else {
+          alert('✅ ' + json.mensaje);
+          document.getElementById('btnCargarUsuarios').click(); // Recarga la tabla
+        }
+      } catch (err) {
+        alert('⚠️ Error en la petición: ' + err.message);
       }
-    } catch (err) {
-      alert('⚠️ Error en la petición: ' + err.message);
     }
-  }
   </script>
 </body>
 </html>
