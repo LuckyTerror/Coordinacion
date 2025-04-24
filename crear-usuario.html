@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Crear Usuario</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Agregamos SweetAlert2 desde CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.32/sweetalert2.all.min.js"></script>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .card {
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .btn-success {
+      transition: all 0.3s ease;
+    }
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: #198754;
+      box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+    }
+  </style>
 </head>
 <body class="bg-light">
   <div class="container mt-5">
@@ -41,16 +63,17 @@
               <option value="temporal">Temporal</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-success">Crear Usuario</button>
+          <div class="d-flex">
+            <button type="submit" class="btn btn-success">Crear Usuario</button>
+            <a href="usuarios.html" class="btn btn-secondary ms-2">Cancelar</a>
+          </div>
         </form>
-        <div id="resultado" class="mt-4"></div>
       </div>
     </div>
   </div>
 
   <script>
     const form = document.getElementById('formularioUsuario');
-    const resultado = document.getElementById('resultado');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -58,7 +81,28 @@
       const formData = new FormData(form);
       const datos = Object.fromEntries(formData.entries());
 
+      // Validar campos antes de enviar
+      if (!datos.nombre || !datos.correo || !datos.contrasena) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campos incompletos',
+          text: 'Por favor completa todos los campos requeridos',
+          confirmButtonColor: '#198754'
+        });
+        return;
+      }
+
       try {
+        // Mostrar indicador de carga
+        Swal.fire({
+          title: 'Creando usuario',
+          text: 'Procesando la solicitud...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
         const res = await fetch('http://localhost:3000/api/usuarios', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -66,14 +110,51 @@
         });
 
         const json = await res.json();
+        
         if (json.error) {
-          resultado.innerHTML = `<div class="alert alert-danger">❌ ${json.error}</div>`;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: json.error,
+            confirmButtonColor: '#198754'
+          });
         } else {
-          resultado.innerHTML = `<div class="alert alert-success">✅ ${json.mensaje} (ID: ${json.id})</div>`;
-          form.reset();
+          // Mostrar alerta de éxito con información del usuario
+          Swal.fire({
+            icon: 'success',
+            title: '¡Usuario creado!',
+            html: `
+              <div class="text-start">
+                <p>${json.mensaje}</p>
+                <p><strong>ID:</strong> ${json.id}</p>
+                <p><strong>Nombre:</strong> ${datos.nombre}</p>
+                <p><strong>Correo:</strong> ${datos.correo}</p>
+                <p><strong>Rol:</strong> ${datos.rol}</p>
+                <p><strong>Estatus:</strong> ${datos.estatus}</p>
+              </div>
+            `,
+            confirmButtonText: 'Crear otro usuario',
+            confirmButtonColor: '#198754',
+            showCancelButton: true,
+            cancelButtonText: 'Ir a la lista',
+            cancelButtonColor: '#6c757d'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Reiniciar el formulario para crear otro usuario
+              form.reset();
+            } else {
+              // Redireccionar a la lista de usuarios
+              window.location.href = 'usuarios.html';
+            }
+          });
         }
       } catch (err) {
-        resultado.innerHTML = `<div class="alert alert-danger">⚠️ Error en la petición: ${err.message}</div>`;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en la petición',
+          text: err.message,
+          confirmButtonColor: '#198754'
+        });
       }
     });
   </script>
