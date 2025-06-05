@@ -50,4 +50,3 @@ exports.crearUsuario = (req, res) => {
     });
   });
 };
-
