@@ -10,9 +10,13 @@
 <body class="bg-light">
   <div class="container mt-5">
     <div class="card shadow">
-      <div class="card-header bg-primary text-white">
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
         <h4 class="mb-0" id="tituloDocumento">Entrega de Documentos Académicos</h4>
-      </div>
+        <div class="d-flex align-items-center gap-2">
+          <span id="usuarioActivo" class="me-2 small"></span>
+          <button id="btnVolver" class="btn btn-light btn-sm d-none">⬅️ Volver al panel</button>
+        </div>
+      </div>           
       <div class="card-body">
         <div class="table-responsive">
           <table class="table table-bordered align-middle text-center">
@@ -38,6 +42,10 @@
   <script>
       // Obtener el usuario que inició sesión
     const usuario = JSON.parse(localStorage.getItem('usuario'));
+        // Mostrar sesión activa
+    document.getElementById('usuarioActivo').textContent =
+      `👤 ${usuario.nombre} (${usuario.rol.charAt(0).toUpperCase() + usuario.rol.slice(1)})`;
+
     const usuarioRevisadoID = localStorage.getItem('usuarioRevisado');
 
     // Si no hay sesión, redirigir al login
@@ -52,6 +60,13 @@
         .then(usuarioRevisado => {
           document.getElementById('tituloDocumento').textContent =
             `Entrega de Documentos Académicos – ${usuarioRevisado.Nombre}`;
+          
+                    // Mostrar botón de volver
+          document.getElementById('btnVolver').classList.remove('d-none');
+          document.getElementById('btnVolver').addEventListener('click', () => {
+            localStorage.removeItem('usuarioRevisado');
+            window.location.href = 'usuarios.html';
+          });
         })
         .catch(() => {
           document.getElementById('tituloDocumento').textContent =
@@ -67,56 +82,56 @@
         nombre: "Constancia de Cursos de Actualización y CV",
         descripcion: "Documento que acredita formación reciente del docente.",
         periodo: "2025-A",
-        fechaLimite: "2025-04-30"
+        fechaLimite: "20/06"
       },
       {
         id: 2,
         nombre: "Avance Programático Inicial",
         descripcion: "Plan de trabajo al inicio del semestre.",
         periodo: "2025-A",
-        fechaLimite: "2025-04-30"
+        fechaLimite: "20/06"
       },
       {
         id: 3,
         nombre: "Avance Programático Final",
         descripcion: "Reporte de avance académico al finalizar semestre.",
         periodo: "2025-A",
-        fechaLimite: "2025-06-30"
+        fechaLimite: "20/06"
       },
       {
         id: 4,
         nombre: "Calificaciones Primer Parcial",
         descripcion: "Registro de calificaciones del primer parcial.",
         periodo: "2025-A",
-        fechaLimite: "2025-05-10"
+        fechaLimite: "20/06"
       },
       {
         id: 5,
         nombre: "Calificaciones Segundo Parcial",
         descripcion: "Registro de calificaciones del segundo parcial.",
         periodo: "2025-A",
-        fechaLimite: "2025-06-10"
+        fechaLimite: "20/06"
       },
       {
         id: 6,
         nombre: "Calificaciones Evaluación Final (Ordinario)",
         descripcion: "Calificaciones de evaluación final ordinaria.",
         periodo: "2025-A",
-        fechaLimite: "2025-06-25"
+        fechaLimite: "20/06"
       },
       {
         id: 7,
         nombre: "Calificaciones Extraordinario",
         descripcion: "Calificaciones de alumnos en examen extraordinario.",
         periodo: "2025-A",
-        fechaLimite: "2025-07-05"
+        fechaLimite: "20/06"
       },
       {
         id: 8,
         nombre: "Calificaciones Titulo de Suficiencia",
         descripcion: "Evaluaciones aplicadas bajo título de suficiencia.",
         periodo: "2025-A",
-        fechaLimite: "2025-07-15"
+        fechaLimite: "20/06"
       }
     ];
 
