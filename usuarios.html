@@ -9,14 +9,28 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.32/sweetalert2.all.min.js"></script>
   <style>
     body {
-      background-color: #f8f9fa;
+      background: linear-gradient(rgba(44, 82, 52, 0.7), rgba(44, 82, 52, 0.8)), url('img/background-image.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
     .card {
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background-color: white;
+    }
+    .card-header {
+      background-color: #2C5234 !important;
+      color: white;
     }
     .table th, .table td {
       vertical-align: middle;
+    }
+    .table-light th {
+      background-color: #f8f9fa;
+      color: #2C5234;
+      font-weight: 600;
     }
     .badge {
       font-size: 0.9rem;
@@ -29,12 +43,38 @@
     .btn-accion:hover {
       transform: scale(1.1);
     }
+    .btn-primary {
+      background-color: #9C8412;
+      border-color: #9C8412;
+    }
+    .btn-primary:hover {
+      background-color: #8a7310;
+      border-color: #8a7310;
+    }
+    .btn-light {
+      background-color: white;
+      color: #2C5234;
+      border-color: white;
+      font-weight: 500;
+    }
+    .btn-light:hover {
+      background-color: #f8f9fa;
+      color: #2C5234;
+      border-color: #f8f9fa;
+    }
+    h4 {
+      color: white;
+    }
+    .container {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+    }
   </style>
 </head>
 <body>
   <div class="container mt-5">
     <div class="card shadow">
-      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <div class="card-header d-flex justify-content-between align-items-center">
         <h4 class="mb-0">Usuarios Registrados</h4>
         <a href="crear-usuario.html" class="btn btn-light btn-sm">➕ Nuevo Usuario</a>
       </div>      
@@ -84,7 +124,7 @@
             icon: 'info',
             title: 'Sin resultados',
             text: 'No hay usuarios registrados',
-            confirmButtonColor: '#0d6efd'
+            confirmButtonColor: '#9C8412'
           });
           return;
         }
@@ -129,7 +169,7 @@
           title: 'Error',
           text: 'No se pudieron cargar los usuarios',
           footer: error.message,
-          confirmButtonColor: '#0d6efd'
+          confirmButtonColor: '#9C8412'
         });
       }
     });
@@ -179,14 +219,14 @@
             icon: 'error',
             title: 'Error',
             text: json.error,
-            confirmButtonColor: '#0d6efd'
+            confirmButtonColor: '#9C8412'
           });
         } else {
           Swal.fire({
             icon: 'success',
             title: 'Usuario dado de baja',
             text: json.mensaje,
-            confirmButtonColor: '#0d6efd',
+            confirmButtonColor: '#9C8412',
             timer: 2000,
             timerProgressBar: true
           });
@@ -197,7 +237,7 @@
           icon: 'error',
           title: 'Error en la petición',
           text: err.message,
-          confirmButtonColor: '#0d6efd'
+          confirmButtonColor: '#9C8412'
         });
       }
     }

@@ -8,7 +8,11 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     body {
-      background-color: #f0f2f5;
+      background: linear-gradient(rgba(44, 82, 52, 0.7), rgba(44, 82, 52, 0.8)), url('img/background-image.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -19,10 +23,21 @@
       max-width: 400px;
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      background-color: white;
     }
     .btn-primary {
-      background-color: #007bff;
+      background-color: #9C8412;
       border: none;
+    }
+    .btn-primary:hover {
+      background-color: #8a7310;
+    }
+    h4 {
+      color: #2C5234;
+    }
+    .form-label {
+      color: #2C5234;
+      font-weight: 500;
     }
   </style>
 </head>

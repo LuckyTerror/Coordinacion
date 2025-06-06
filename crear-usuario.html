@@ -9,29 +9,61 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.32/sweetalert2.all.min.js"></script>
   <style>
     body {  
-      background-color: #f8f9fa;
+      background: linear-gradient(rgba(44, 82, 52, 0.7), rgba(44, 82, 52, 0.8)), url('img/background-image.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
     .card {
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: white;
+    }
+    .card-header {
+      background-color: #2C5234 !important;
+      color: white;
     }
     .btn-success {
+      background-color: #9C8412;
+      border-color: #9C8412;
       transition: all 0.3s ease;
     }
     .btn-success:hover {
+      background-color: #8a7310;
+      border-color: #8a7310;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
+    .btn-secondary {
+      background-color: #6c757d;
+      border-color: #6c757d;
+    }
+    .btn-secondary:hover {
+      background-color: #5c636a;
+      border-color: #565e64;
+    }
     .form-control:focus, .form-select:focus {
-      border-color: #198754;
-      box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+      border-color: #9C8412;
+      box-shadow: 0 0 0 0.25rem rgba(156, 132, 18, 0.25);
+    }
+    .form-label {
+      color: #2C5234;
+      font-weight: 500;
+    }
+    h4 {
+      color: white;
+    }
+    .container {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
     }
   </style>
 </head>
-<body class="bg-light">
+<body>
   <div class="container mt-5">
     <div class="card shadow">
-      <div class="card-header bg-primary text-white">
+      <div class="card-header">
         <h4 class="mb-0">Registro de Usuario</h4>
       </div>
       <div class="card-body">
@@ -87,7 +119,7 @@
           icon: 'warning',
           title: 'Campos incompletos',
           text: 'Por favor completa todos los campos requeridos',
-          confirmButtonColor: '#198754'
+          confirmButtonColor: '#9C8412'
         });
         return;
       }
@@ -116,7 +148,7 @@
             icon: 'error',
             title: 'Error',
             text: json.error,
-            confirmButtonColor: '#198754'
+            confirmButtonColor: '#9C8412'
           });
         } else {
           // Mostrar alerta de éxito con información del usuario
@@ -134,7 +166,7 @@
               </div>
             `,
             confirmButtonText: 'Crear otro usuario',
-            confirmButtonColor: '#198754',
+            confirmButtonColor: '#9C8412',
             showCancelButton: true,
             cancelButtonText: 'Ir a la lista',
             cancelButtonColor: '#6c757d'
@@ -153,7 +185,7 @@
           icon: 'error',
           title: 'Error en la petición',
           text: err.message,
-          confirmButtonColor: '#198754'
+          confirmButtonColor: '#9C8412'
         });
       }
     });
