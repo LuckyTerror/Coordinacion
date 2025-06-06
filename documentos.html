@@ -11,7 +11,7 @@
   <div class="container mt-5">
     <div class="card shadow">
       <div class="card-header bg-primary text-white">
-        <h4 class="mb-0">Entrega de Documentos Académicos</h4>
+        <h4 class="mb-0" id="tituloDocumento">Entrega de Documentos Académicos</h4>
       </div>
       <div class="card-body">
         <div class="table-responsive">
@@ -36,6 +36,18 @@
   </div>
 
   <script>
+        // Obtener usuario desde localStorage
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    // Si no hay usuario (sesión no iniciada), redirige a login
+    if (!usuario) {
+      window.location.href = 'login.html';
+    }
+
+    // Actualizar título con el nombre del usuario
+    document.getElementById('tituloDocumento').textContent =
+      `Entrega de Documentos Académicos – ${usuario.nombre}`;
+
     const documentos = [
       {
         id: 1,
