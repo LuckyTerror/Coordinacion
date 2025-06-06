@@ -36,18 +36,31 @@
   </div>
 
   <script>
-        // Obtener usuario desde localStorage
+      // Obtener el usuario que inició sesión
     const usuario = JSON.parse(localStorage.getItem('usuario'));
+    const usuarioRevisadoID = localStorage.getItem('usuarioRevisado');
 
-    // Si no hay usuario (sesión no iniciada), redirige a login
+    // Si no hay sesión, redirigir al login
     if (!usuario) {
       window.location.href = 'login.html';
     }
 
-    // Actualizar título con el nombre del usuario
-    document.getElementById('tituloDocumento').textContent =
-      `Entrega de Documentos Académicos – ${usuario.nombre}`;
-
+    // Actualizar el título de la tabla según el usuario
+    if (usuario.rol === 'coordinador' && usuarioRevisadoID) {
+      fetch(`http://localhost:3000/api/usuarios/${usuarioRevisadoID}`)
+        .then(res => res.json())
+        .then(usuarioRevisado => {
+          document.getElementById('tituloDocumento').textContent =
+            `Entrega de Documentos Académicos – ${usuarioRevisado.Nombre}`;
+        })
+        .catch(() => {
+          document.getElementById('tituloDocumento').textContent =
+            `Entrega de Documentos Académicos – Usuario no encontrado`;
+        });
+    } else {
+      document.getElementById('tituloDocumento').textContent =
+        `Entrega de Documentos Académicos – ${usuario.nombre}`;
+    }
     const documentos = [
       {
         id: 1,

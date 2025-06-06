@@ -208,14 +208,12 @@
     });
 
   function verEntregas(id) {
-    Swal.fire({
-      title: '📄 Función no implementada',
-      text: `Pronto podrás ver las entregas del usuario con ID: ${id}`,
-      icon: 'info',
-      confirmButtonColor: '#0d6efd'
-    });
-  // En el futuro: window.location.href = `ver-entregas.html?id=${id}`;
-}
+    // Guardar el ID del usuario que se quiere revisar
+    localStorage.setItem('usuarioRevisado', id);
+
+    // Redirigir a documentos.html
+    window.location.href = 'documentos.html';
+  }
   </script>
 </body>
 </html>
