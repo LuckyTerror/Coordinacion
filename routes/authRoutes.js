@@ -2,9 +2,10 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
+const authController = require('../controllers/authController');
 
-router.post('/login', (req, res) => {
-  const { correo, contrasena } = req.body;
+// Ruta para login
+router.post('/login', authController.login);
 
   if (!correo || !contrasena) {
     return res.status(400).json({ error: 'Correo y contraseña obligatorios' });
