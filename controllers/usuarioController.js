@@ -12,7 +12,7 @@ exports.obtenerUsuarios = (req, res) => {
   });
 };
 
-exports.crearUsuario = (req, res) => {
+exports.crearUsuario = async  (req, res) => {
   const { nombre, correo, contrasena, tipo_usuario, id_carrera, estatus } = req.body;
 
   // Validación básica
