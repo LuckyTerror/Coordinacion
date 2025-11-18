@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const bcrypt = require('bcrypt');
 
 exports.obtenerUsuarios = (req, res) => {
   db.query('SELECT * FROM Usuario', (err, results) => {
@@ -34,7 +35,11 @@ exports.crearUsuario = (req, res) => {
     if (results.length > 0) {
       return res.status(409).json({ error: 'El correo ya está registrado' });
     }
-
+    
+ try {
+      // Hasheo de contraseña
+      const hashedPassword = await bcrypt.hash(contrasena, 10);
+   
     // Insertar usuario
     const sql = `
       INSERT INTO Usuario (nombre, correo, contrasena, tipo_usuario, id_carrera, estatus)
@@ -47,6 +52,11 @@ exports.crearUsuario = (req, res) => {
       }
 
       res.status(201).json({ message: '✅ Usuario creado correctamente', id: result.insertId });
-    });
+    }
+);
+   } catch (error) {
+      console.error('❌ Error al hashear la contraseña:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
   });
 };
