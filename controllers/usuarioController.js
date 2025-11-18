@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt'); // 👈 Necesario para hashear
 
 exports.obtenerUsuarios = (req, res) => {
   db.query('SELECT * FROM Usuario', (err, results) => {
@@ -12,7 +12,7 @@ exports.obtenerUsuarios = (req, res) => {
   });
 };
 
-exports.crearUsuario = async  (req, res) => {
+exports.crearUsuario = async (req, res) => {
   const { nombre, correo, contrasena, tipo_usuario, id_carrera, estatus } = req.body;
 
   // Validación básica
@@ -26,7 +26,7 @@ exports.crearUsuario = async  (req, res) => {
   }
 
   // Verificar si el correo ya existe
-  db.query('SELECT * FROM Usuario WHERE correo = ?', [correo], (err, results) => {
+  db.query('SELECT * FROM Usuario WHERE correo = ?', [correo], async (err, results) => {
     if (err) {
       console.error('❌ Error al verificar el correo:', err);
       return res.status(500).json({ error: 'Error del servidor' });
@@ -35,26 +35,33 @@ exports.crearUsuario = async  (req, res) => {
     if (results.length > 0) {
       return res.status(409).json({ error: 'El correo ya está registrado' });
     }
-    
- try {
-      // Hasheo de contraseña
-      const hashedPassword = await bcrypt.hash(contrasena, 10);
-   
-    // Insertar usuario
-    const sql = `
-      INSERT INTO Usuario (nombre, correo, contrasena, tipo_usuario, id_carrera, estatus)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `;
-    db.query(sql, [nombre, correo, contrasena, tipo_usuario, id_carrera, estatus], (err, result) => {
-      if (err) {
-        console.error('❌ Error al crear usuario:', err);
-        return res.status(500).json({ error: 'Error al crear el usuario' });
-      }
 
-      res.status(201).json({ message: '✅ Usuario creado correctamente', id: result.insertId });
-    }
-);
-   } catch (error) {
+    try {
+      // 🔐 HASHEAR CONTRASEÑA AQUÍ
+      const hashedPassword = await bcrypt.hash(contrasena, 10);
+
+      const sql = `
+        INSERT INTO Usuario (nombre, correo, contrasena, tipo_usuario, id_carrera, estatus)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `;
+
+      db.query(
+        sql,
+        [nombre, correo, hashedPassword, tipo_usuario, id_carrera, estatus],
+        (err, result) => {
+          if (err) {
+            console.error('❌ Error al crear usuario:', err);
+            return res.status(500).json({ error: 'Error al crear el usuario' });
+          }
+
+          res.status(201).json({
+            message: '✅ Usuario creado correctamente',
+            id: result.insertId
+          });
+        }
+      );
+
+    } catch (error) {
       console.error('❌ Error al hashear la contraseña:', error);
       res.status(500).json({ error: 'Error interno del servidor' });
     }
