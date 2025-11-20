@@ -1,6 +1,9 @@
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
 
+// =======================
+// LOGIN
+// =======================
 exports.login = (req, res) => {
   const { correo, contrasena } = req.body;
 
@@ -22,7 +25,7 @@ exports.login = (req, res) => {
 
     const usuario = results[0];
 
-    // 👀 Comparar con bcrypt
+    // Comparar hash
     const contrasenaValida = await bcrypt.compare(contrasena, usuario.contrasena);
 
     if (!contrasenaValida) {
@@ -40,8 +43,17 @@ exports.login = (req, res) => {
   });
 };
 
+// =======================
+// CREAR USUARIO
+// =======================
+exports.crearUsuario = async (req, res) => {
+  const { nombre, correo, contrasena, tipo_usuario, id_carrera, estatus } = req.body;
 
-  // Verificar si el correo ya existe
+  if (!nombre || !correo || !contrasena || !tipo_usuario || !id_carrera || !estatus) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+  }
+
+  // Verificar correo existente
   db.query('SELECT * FROM Usuario WHERE correo = ?', [correo], async (err, results) => {
     if (err) {
       console.error('❌ Error al verificar el correo:', err);
@@ -53,7 +65,7 @@ exports.login = (req, res) => {
     }
 
     try {
-      // 🔐 HASHEAR CONTRASEÑA AQUÍ
+      // Hashear contraseña
       const hashedPassword = await bcrypt.hash(contrasena, 10);
 
       const sql = `
@@ -83,3 +95,4 @@ exports.login = (req, res) => {
     }
   });
 };
+
