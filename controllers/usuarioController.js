@@ -1,29 +1,45 @@
 const db = require('../config/db');
-const bcrypt = require('bcrypt'); // 👈 Necesario para hashear
+const bcrypt = require('bcrypt');
 
-exports.obtenerUsuarios = (req, res) => {
-  db.query('SELECT * FROM Usuario', (err, results) => {
+exports.login = (req, res) => {
+  const { correo, contrasena } = req.body;
+
+  if (!correo || !contrasena) {
+    return res.status(400).json({ error: 'Correo y contraseña obligatorios' });
+  }
+
+  const sql = 'SELECT * FROM Usuario WHERE correo = ? LIMIT 1';
+
+  db.query(sql, [correo], async (err, results) => {
     if (err) {
-      console.error('❌ Error al obtener usuarios:', err);
-      res.status(500).json({ error: 'Error del servidor' });
-    } else {
-      res.status(200).json(results);
+      console.error('❌ Error al consultar usuario:', err);
+      return res.status(500).json({ error: 'Error del servidor' });
     }
+
+    if (results.length === 0) {
+      return res.status(401).json({ error: 'Correo no registrado' });
+    }
+
+    const usuario = results[0];
+
+    // 👀 Comparar con bcrypt
+    const contrasenaValida = await bcrypt.compare(contrasena, usuario.contrasena);
+
+    if (!contrasenaValida) {
+      return res.status(401).json({ error: 'Contraseña incorrecta' });
+    }
+
+    res.json({
+      message: 'Login exitoso',
+      usuarioID: usuario.UsuarioID,
+      nombre: usuario.Nombre,
+      correo: usuario.Correo,
+      tipo_usuario: usuario.tipo_usuario,
+      estatus: usuario.estatus
+    });
   });
 };
 
-exports.crearUsuario = async (req, res) => {
-  const { nombre, correo, contrasena, tipo_usuario, id_carrera, estatus } = req.body;
-
-  // Validación básica
-  if (!nombre || !correo || !contrasena || !tipo_usuario || !id_carrera || !estatus) {
-    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-  }
-
-  const estatusPermitidos = ['activo', 'baja', 'temporal'];
-  if (!estatusPermitidos.includes(estatus)) {
-    return res.status(400).json({ error: 'Estatus inválido' });
-  }
 
   // Verificar si el correo ya existe
   db.query('SELECT * FROM Usuario WHERE correo = ?', [correo], async (err, results) => {
